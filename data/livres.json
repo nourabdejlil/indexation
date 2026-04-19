@@ -1,0 +1,142 @@
+[
+    {
+        "id": 1,
+        "titre": "Le Petit Prince",
+        "description": "Un aviateur rencontre un petit prince venu d'une autre planète. Ensemble, ils découvrent les mystères de l'amitié, de l'amour et de la vie. Une histoire poétique sur l'importance des choses essentielles.",
+        "auteur": "Antoine de Saint-Exupéry",
+        "genre": "Philosophique"
+    },
+    {
+        "id": 2,
+        "titre": "Les Misérables",
+        "description": "Jean Valjean, ancien bagnard, cherche sa rédemption dans la France du XIXe siècle. Il croise la route de l'inspecteur Javert, qui le poursuit sans relâche. Un roman sur la justice, l'amour et la condition humaine.",
+        "auteur": "Victor Hugo",
+        "genre": "Historique"
+    },
+    {
+        "id": 3,
+        "titre": "Vingt Mille Lieues sous les Mers",
+        "description": "Le professeur Aronnax embarque pour une chasse au monstre marin dans la mer, mais découvre le Nautilus, un sous-marin extraordinaire commandé par le mystérieux capitaine Nemo. Une aventure passionnante dans les profondeurs de la mer.",
+        "auteur": "Jules Verne",
+        "genre": "Science-Fiction"
+    },
+    {
+        "id": 4,
+        "titre": "L'Etranger",
+        "description": "Meursault, un employé de bureau ordinaire, commet un meurtre sur une plage en Algérie. Le roman explore l'absurdité de l'existence et l'indifférence de l'homme face à la société.",
+        "auteur": "Albert Camus",
+        "genre": "Philosophique"
+    },
+    {
+        "id": 5,
+        "titre": "Notre-Dame de Paris",
+        "description": "Quasimodo, sonneur de cloches difforme et solitaire, aime la belle Esmeralda. Frollo, l'archidiacre, est également épris de la jeune femme. Une tragédie médiévale sur la beauté, la monstruosité et l'amour impossible.",
+        "auteur": "Victor Hugo",
+        "genre": "Historique"
+    },
+    {
+        "id": 6,
+        "titre": "La Peste",
+        "description": "Une épidémie de peste s'abat sur la ville d'Oran. Le docteur Rieux et ses compagnons luttent contre le fléau. Une réflexion sur la solidarité, la souffrance et la condition humaine face à l'adversité.",
+        "auteur": "Albert Camus",
+        "genre": "Philosophique"
+    },
+    {
+        "id": 7,
+        "titre": "Le Tour du Monde en Quatre-Vingts Jours",
+        "description": "Phileas Fogg parie qu'il peut faire le tour du monde en quatre-vingts jours. Accompagné de son fidèle domestique Passepartout, il vit une série d'aventures rocambolesques à travers les continents.",
+        "auteur": "Jules Verne",
+        "genre": "Aventure"
+    },
+    {
+        "id": 8,
+        "titre": "Germinal",
+        "description": "Etienne Lantier, un mineur, organise la révolte des ouvriers contre les conditions de travail inhumaines dans les mines du nord de la France. Un roman sur la lutte des classes et la misère ouvrière.",
+        "auteur": "Emile Zola",
+        "genre": "Classique"
+    },
+    {
+        "id": 9,
+        "titre": "Madame Bovary",
+        "description": "Emma Bovary, femme d'un médecin de province, s'ennuie dans son mariage et cherche l'amour et le luxe dans des aventures adultères. Une critique de la bourgeoisie et du romantisme.",
+        "auteur": "Gustave Flaubert",
+        "genre": "Drame"
+    },
+    {
+        "id": 10,
+        "titre": "Le Comte de Monte-Cristo",
+        "description": "Edmond Dantès, trahi par ses amis, est emprisonné au château d'If. Il s'évade, trouve un trésor et se venge de ceux qui l'ont accusé. Une histoire de vengeance, de justice et de rédemption.",
+        "auteur": "Alexandre Dumas",
+        "genre": "Aventure"
+    },
+    {
+        "id": 11,
+        "titre": "Voyage au Centre de la Terre",
+        "description": "Le professeur Lidenbrock découvre un manuscrit ancien indiquant un passage vers le centre de la Terre. Il s'enfonce avec son neveu dans les profondeurs volcaniques pour une expédition extraordinaire.",
+        "auteur": "Jules Verne",
+        "genre": "Science-Fiction"
+    },
+    {
+        "id": 12,
+        "titre": "La Chartreuse de Parme",
+        "description": "Fabrice del Dongo, jeune noble italien, participe à la bataille de Waterloo avant de vivre des intrigues amoureuses et politiques à la cour de Parme. Un roman sur l'énergie et la passion.",
+        "auteur": "Stendhal",
+        "genre": "Aventure"
+    },
+    {
+        "id": 13,
+        "titre": "Bel-Ami",
+        "description": "Georges Duroy, jeune homme ambitieux et séducteur, utilise les femmes et la corruption pour gravir les échelons de la société parisienne. Une critique acerbe du journalisme et de la politique.",
+        "auteur": "Guy de Maupassant",
+        "genre": "Drame"
+    },
+    {
+        "id": 14,
+        "titre": "Les Fleurs du Mal",
+        "description": "Un recueil de poèmes explorant la beauté, le mal, la mort, l'ennui et la quête spirituelle. Baudelaire y exprime sa révolte contre la médiocrité et son aspiration à l'idéal.",
+        "auteur": "Charles Baudelaire",
+        "genre": "Poésie"
+    },
+    {
+        "id": 15,
+        "titre": "Le Rouge et le Noir",
+        "description": "Julien Sorel, jeune fils de charpentier ambitieux, rêve de gravir l'échelle sociale dans la France de la Restauration. Entre l'armée et l'église, il choisit la séduction et l'hypocrisie.",
+        "auteur": "Stendhal",
+        "genre": "Drame"
+    },
+    {
+        "id": 16,
+        "titre": "Orgueil et Préjugés",
+        "description": "Elizabeth Bennet, jeune femme intelligente et indépendante, doit choisir entre les attentes de sa famille et ses propres sentiments. Une histoire d'amour entre fierté et préjugés dans l'Angleterre du XIXe siècle.",
+        "auteur": "Jane Austen",
+        "genre": "Romance"
+    },
+    {
+        "id": 17,
+        "titre": "Les Trois Mousquetaires",
+        "description": "D'Artagnan, jeune Gascon ambitieux, rejoint les mousquetaires du roi. Avec Athos, Porthos et Aramis, il défend l'honneur de la reine contre les intrigues du cardinal de Richelieu.",
+        "auteur": "Alexandre Dumas",
+        "genre": "Aventure"
+    },
+    {
+        "id": 18,
+        "titre": "Candide",
+        "description": "Candide, jeune homme naïf, parcourt le monde après avoir été chassé du château du baron. À travers ses aventures, Voltaire critique l'optimisme philosophique et dénonce les maux de son époque.",
+        "auteur": "Voltaire",
+        "genre": "Philosophique"
+    },
+    {
+        "id": 19,
+        "titre": "Le Père Goriot",
+        "description": "Le père Goriot, vieillard ruiné, sacrifie tout pour ses filles qui le méprisent. Eugène de Rastignac, jeune étudiant ambitieux, observe cette tragédie familiale dans la pension Vauquer.",
+        "auteur": "Honoré de Balzac",
+        "genre": "Drame"
+    },
+    {
+        "id": 20,
+        "titre": "Jane Eyre",
+        "description": "Jane Eyre, orpheline maltraitée, devient gouvernante dans le manoir de Thornfield. Elle tombe amoureuse de son mystérieux employeur, M. Rochester, mais un sombre secret menace leur bonheur.",
+        "auteur": "Charlotte Brontë",
+        "genre": "Romance"
+    }
+]

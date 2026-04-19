@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 Bibliothèque Recherche - {% block title %}Moteur de recherche{% endblock %}</title>
+    
+    <!-- Bootstrap CSS (CDN) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome (icônes) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ============================================
+           STYLE DIRECT DANS BASE.HTML
+           ============================================ */
+        
+        /* Couleurs */
+        :root {
+            --vert-pastel: #A5D6A7;
+            --vert-latte: #C8E6C9;
+            --vert-fonce: #66BB6A;
+            --rose-pastel: #F8BBD9;
+            --rose-clair: #FCE4EC;
+            --rose-fonce: #F48FB1;
+            --blanc: #FFFFFF;
+            --gris-clair: #FAFAFA;
+            --texte: #4A4A4A;
+        }
+
+        /* Corps de la page */
+        body {
+            background: linear-gradient(135deg, var(--vert-latte) 0%, var(--rose-clair) 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--texte);
+            min-height: 100vh;
+        }
+
+        /* Barre de navigation */
+        .navbar {
+            background: linear-gradient(135deg, var(--vert-pastel) 0%, var(--vert-fonce) 100%) !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.6rem;
+            color: var(--blanc) !important;
+        }
+
+        .navbar-brand i {
+            margin-right: 8px;
+        }
+
+        .nav-link {
+            color: var(--blanc) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        /* Cartes */
+        .card {
+            border: none;
+            border-radius: 24px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            background-color: var(--blanc);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--vert-pastel) 0%, var(--vert-fonce) 100%);
+            border-radius: 24px 24px 0 0 !important;
+            border: none;
+            color: var(--blanc);
+        }
+
+        .card-header h1, .card-header h2, .card-header h3, .card-header h4 {
+            color: var(--blanc);
+        }
+
+        .card-footer {
+            background-color: var(--gris-clair);
+            border-top: none;
+            border-radius: 0 0 24px 24px;
+        }
+
+        /* Boutons */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--vert-pastel) 0%, var(--vert-fonce) 100%) !important;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--vert-fonce) 0%, var(--vert-pastel) 100%) !important;
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--rose-pastel) 0%, var(--rose-fonce) 100%) !important;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-weight: 600;
+            color: var(--blanc);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, var(--rose-fonce) 0%, var(--rose-pastel) 100%) !important;
+            transform: scale(1.02);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--vert-pastel);
+            color: var(--vert-fonce);
+            background: transparent;
+            border-radius: 50px;
+        }
+
+        .btn-outline-primary:hover {
+            background: linear-gradient(135deg, var(--vert-pastel) 0%, var(--vert-fonce) 100%);
+            border-color: transparent;
+            color: var(--blanc);
+        }
+
+        /* Résultats de recherche */
+        .resultat-item {
+            border-radius: 20px !important;
+            border: 1px solid rgba(165, 214, 167, 0.3) !important;
+            background-color: var(--blanc);
+            transition: all 0.3s ease;
+        }
+
+        .resultat-item:hover {
+            border-color: var(--vert-pastel) !important;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .resultat-item h3 a {
+            color: var(--vert-fonce);
+            text-decoration: none;
+        }
+
+        .resultat-item h3 a:hover {
+            color: var(--rose-fonce);
+        }
+
+        /* Badges */
+        .badge {
+            border-radius: 50px;
+            padding: 8px 16px;
+            font-weight: 500;
+        }
+
+        .bg-success {
+            background: linear-gradient(135deg, var(--vert-pastel) 0%, var(--vert-fonce) 100%) !important;
+        }
+
+        .bg-info {
+            background: linear-gradient(135deg, var(--rose-pastel) 0%, var(--rose-fonce) 100%) !important;
+        }
+
+        /* Mots clés */
+        .mot-cle {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--vert-latte) 0%, var(--vert-pastel) 100%);
+            padding: 6px 14px;
+            margin: 4px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--texte);
+            transition: all 0.3s ease;
+        }
+
+        .mot-cle:hover {
+            background: linear-gradient(135deg, var(--vert-pastel) 0%, var(--vert-fonce) 100%);
+            color: var(--blanc);
+            transform: scale(1.05);
+        }
+
+        /* Formulaire de recherche */
+        .input-group-lg .form-control {
+            border-radius: 50px 0 0 50px;
+            border: 2px solid var(--vert-pastel);
+            padding: 12px 20px;
+        }
+
+        .input-group-lg .form-control:focus {
+            border-color: var(--rose-fonce);
+            box-shadow: 0 0 0 3px rgba(244, 143, 177, 0.2);
+            outline: none;
+        }
+
+        .input-group-lg .btn {
+            border-radius: 0 50px 50px 0;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--vert-fonce) 0%, var(--vert-pastel) 100%);
+            color: var(--blanc) !important;
+            padding: 20px 0;
+            margin-top: 50px;
+        }
+
+        footer p {
+            margin: 0;
+            color: var(--blanc);
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card, .resultat-item {
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        /* Boutons suggestions */
+        .suggestion-btn {
+            background: var(--blanc);
+            border: 2px solid var(--vert-pastel);
+            color: var(--vert-fonce);
+            border-radius: 50px;
+            margin: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .suggestion-btn:hover {
+            background: linear-gradient(135deg, var(--vert-pastel) 0%, var(--vert-fonce) 100%);
+            color: var(--blanc);
+            transform: scale(1.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .display-4 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Barre de navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('accueil') }}">
+                <i class="fas fa-book"></i> Bibliothèque Recherche
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('accueil') }}">
+                            <i class="fas fa-search"></i> Recherche
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('liste_livres') }}">
+                            <i class="fas fa-list"></i> Catalogue
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('statistiques') }}">
+                            <i class="fas fa-chart-bar"></i> Statistiques
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages flash -->
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Contenu principal -->
+    <main class="container mt-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-3 mt-5">
+        <div class="container">
+            <p class="mb-0">
+                <i class="fas fa-search"></i> Moteur de recherche documentaire avec TF-IDF
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Recherche avancée - {{ type_recherche }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-filter"></i> 
+                    Résultats pour {{ type_recherche }}
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>{{ nb_resultats }}</strong> livre(s) trouvé(s)
+                </div>
+
+                {% if resultats %}
+                    {% for livre, score in resultats %}
+                    <div class="resultat-item mb-4 p-3 border rounded">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <h3>
+                                    <a href="{{ url_for('detail_livre', livre_id=livre.id) }}" class="text-decoration-none">
+                                        {{ livre.titre }}
+                                    </a>
+                                </h3>
+                                <p class="text-muted">
+                                    <i class="fas fa-user"></i> {{ livre.auteur if livre.auteur else 'Auteur inconnu' }}
+                                    <span class="ms-3">
+                                        <i class="fas fa-tag"></i> {{ livre.genre if livre.genre else 'Genre non spécifié' }}
+                                    </span>
+                                </p>
+                                <p>{{ livre.description[:200] }}{% if livre.description|length > 200 %}...{% endif %}</p>
+                            </div>
+                            <div class="col-md-3 text-end">
+                                <div class="score-badge">
+                                    <span class="badge bg-success fs-6 p-2">
+                                        <i class="fas fa-star"></i> 
+                                        Score: {{ "%.4f"|format(score) }}
+                                    </span>
+                                </div>
+                                <a href="{{ url_for('detail_livre', livre_id=livre.id) }}" class="btn btn-sm btn-outline-primary mt-2">
+                                    <i class="fas fa-info-circle"></i> Détails
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-search fa-4x text-muted mb-3"></i>
+                        <h4>Aucun résultat trouvé</h4>
+                        <p class="text-muted">Essayez avec d'autres critères</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="mt-3 text-center">
+            <a href="{{ url_for('accueil') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour à l'accueil
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

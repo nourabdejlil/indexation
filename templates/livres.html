@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Catalogue des livres{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="mb-4">
+            <i class="fas fa-book"></i> Catalogue des livres
+            <span class="badge bg-primary">{{ livres|length }} livres</span>
+        </h1>
+        
+        <div class="row">
+            {% for livre in livres %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{{ url_for('detail_livre', livre_id=livre.id) }}" class="text-decoration-none">
+                                {{ livre.titre }}
+                            </a>
+                        </h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            <i class="fas fa-user"></i> {{ livre.auteur if livre.auteur else 'Auteur inconnu' }}
+                        </h6>
+                        <span class="badge bg-info mb-2">
+                            <i class="fas fa-tag"></i> {{ livre.genre if livre.genre else 'Non spécifié' }}
+                        </span>
+                        <p class="card-text mt-2">
+                            {{ livre.description[:120] }}{% if livre.description|length > 120 %}...{% endif %}
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="{{ url_for('detail_livre', livre_id=livre.id) }}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-info-circle"></i> Voir détails
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

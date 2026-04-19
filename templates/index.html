@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Recherche{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="text-center mb-5">
+            <h1 class="display-4">
+                <i class="fas fa-search"></i> Moteur de recherche
+            </h1>
+            <p class="lead">
+                Recherchez dans les <strong>titres</strong>, 
+                les <strong>descriptions</strong>, 
+                les <strong>auteurs</strong> et les <strong>genres</strong>
+            </p>
+        </div>
+
+        <div class="card shadow">
+            <div class="card-body">
+                <form method="POST" action="/recherche">
+                    <div class="input-group input-group-lg">
+                        <input type="text" 
+                               class="form-control" 
+                               name="requete" 
+                               id="requete"
+                               placeholder="Ex: amour, aventure mer, Victor Hugo, philosophique..."
+                               autocomplete="off"
+                               required>
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search"></i> Rechercher
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="mt-3 text-center">
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle"></i> 
+                        Les mots vides (le, la, et, de...) sont automatiquement ignorés
+                    </small>
+                </div>
+
+                <!-- Suggestions de recherche -->
+                <div class="mt-4">
+                    <strong><i class="fas fa-lightbulb"></i> Suggestions :</strong>
+                    <div class="mt-2">
+                        <button class="btn btn-sm btn-outline-secondary suggestion-btn" data-query="amour">❤️ amour</button>
+                        <button class="btn btn-sm btn-outline-secondary suggestion-btn" data-query="aventure">⚡ aventure</button>
+                        <button class="btn btn-sm btn-outline-secondary suggestion-btn" data-query="justice">⚖️ justice</button>
+                        <button class="btn btn-sm btn-outline-secondary suggestion-btn" data-query="Victor Hugo">📖 Victor Hugo</button>
+                        <button class="btn btn-sm btn-outline-secondary suggestion-btn" data-query="philosophique">🤔 philosophique</button>
+                        <button class="btn btn-sm btn-outline-secondary suggestion-btn" data-query="romance">💕 romance</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.suggestion-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.getElementById('requete').value = this.dataset.query;
+            document.querySelector('form').submit();
+        });
+    });
+</script>
+{% endblock %}

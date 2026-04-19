@@ -1,0 +1,350 @@
+/* ============================================
+   STYLE PASTEL - VERT LATTÉ & ROSE PASTEL
+   SANS BLEU
+   ============================================ */
+
+:root {
+    /* Couleurs principales - Version douce */
+    --vert-pastel: #A5D6A7;
+    --vert-latte: #C8E6C9;
+    --vert-fonce: #66BB6A;
+    --rose-pastel: #F8BBD9;
+    --rose-clair: #FCE4EC;
+    --rose-fonce: #F48FB1;
+    --sable: #FFF8E1;
+    --peche: #FFCCBC;
+    --blanc: #FFFFFF;
+    --gris-clair: #FAFAFA;
+    --gris-moyen: #E0E0E0;
+    --gris: #9E9E9E;
+    --texte: #4A4A4A;
+    --texte-clair: #6D6D6D;
+}
+
+/* Corps de la page */
+body {
+    background: linear-gradient(135deg, var(--vert-latte) 0%, var(--rose-clair) 100%);
+    font-family: 'Segoe UI', 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--texte);
+    min-height: 100vh;
+}
+
+/* Barre de navigation - VERT */
+.navbar {
+    background: linear-gradient(135deg, var(--vert-pastel) 0%, var(--vert-fonce) 100%) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.6rem;
+    color: var(--blanc) !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand i {
+    margin-right: 8px;
+}
+
+.nav-link {
+    color: var(--blanc) !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+/* Cartes */
+.card {
+    border: none;
+    border-radius: 24px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+    background-color: var(--blanc);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--vert-pastel) 0%, var(--vert-fonce) 100%);
+    border-radius: 24px 24px 0 0 !important;
+    border: none;
+    color: var(--blanc);
+}
+
+.card-header h1, .card-header h2, .card-header h3, .card-header h4 {
+    color: var(--blanc);
+}
+
+.card-footer {
+    background-color: var(--gris-clair);
+    border-top: none;
+    border-radius: 0 0 24px 24px;
+}
+
+/* Boutons - VERT */
+.btn-primary {
+    background: linear-gradient(135deg, var(--vert-pastel) 0%, var(--vert-fonce) 100%) !important;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--vert-fonce) 0%, var(--vert-pastel) 100%) !important;
+    transform: scale(1.02);
+    box-shadow: 0 5px 15px rgba(102, 187, 106, 0.4);
+}
+
+/* Boutons - ROSE */
+.btn-secondary {
+    background: linear-gradient(135deg, var(--rose-pastel) 0%, var(--rose-fonce) 100%) !important;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 25px;
+    font-weight: 600;
+    color: var(--blanc);
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, var(--rose-fonce) 0%, var(--rose-pastel) 100%) !important;
+    transform: scale(1.02);
+    box-shadow: 0 5px 15px rgba(244, 143, 177, 0.4);
+}
+
+/* Boutons outline */
+.btn-outline-primary {
+    border: 2px solid var(--vert-pastel);
+    color: var(--vert-fonce);
+    background: transparent;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background: linear-gradient(135deg, var(--vert-pastel) 0%, var(--vert-fonce) 100%);
+    border-color: transparent;
+    color: var(--blanc);
+    transform: scale(1.02);
+}
+
+.btn-outline-secondary {
+    border: 2px solid var(--rose-pastel);
+    color: var(--rose-fonce);
+    background: transparent;
+    border-radius: 50px;
+}
+
+.btn-outline-secondary:hover {
+    background: linear-gradient(135deg, var(--rose-pastel) 0%, var(--rose-fonce) 100%);
+    border-color: transparent;
+    color: var(--blanc);
+}
+
+/* Résultats de recherche */
+.resultat-item {
+    border-radius: 20px !important;
+    border: 1px solid rgba(165, 214, 167, 0.3) !important;
+    background-color: var(--blanc);
+    transition: all 0.3s ease;
+}
+
+.resultat-item:hover {
+    border-color: var(--vert-pastel) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.resultat-item h3 a {
+    color: var(--vert-fonce);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.resultat-item h3 a:hover {
+    color: var(--rose-fonce);
+}
+
+/* Badges et scores */
+.badge {
+    border-radius: 50px;
+    padding: 8px 16px;
+    font-weight: 500;
+}
+
+.bg-success {
+    background: linear-gradient(135deg, var(--vert-pastel) 0%, var(--vert-fonce) 100%) !important;
+}
+
+.bg-info {
+    background: linear-gradient(135deg, var(--rose-pastel) 0%, var(--rose-fonce) 100%) !important;
+}
+
+.bg-primary {
+    background: linear-gradient(135deg, var(--vert-pastel) 0%, var(--vert-fonce) 100%) !important;
+}
+
+.bg-warning {
+    background: linear-gradient(135deg, #FFE082 0%, #FFD54F 100%) !important;
+}
+
+/* Barre de progression */
+.progress {
+    border-radius: 50px;
+    background-color: var(--gris-clair);
+    height: 10px;
+}
+
+.progress-bar {
+    border-radius: 50px;
+    background: linear-gradient(90deg, var(--vert-pastel) 0%, var(--vert-fonce) 100%);
+}
+
+/* Mots clés */
+.mot-cle {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--vert-latte) 0%, var(--vert-pastel) 100%);
+    padding: 6px 14px;
+    margin: 4px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    color: var(--texte);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.mot-cle:hover {
+    background: linear-gradient(135deg, var(--vert-pastel) 0%, var(--vert-fonce) 100%);
+    color: var(--blanc);
+    transform: scale(1.05);
+}
+
+/* Alertes */
+.alert {
+    border-radius: 16px;
+    border: none;
+}
+
+.alert-info {
+    background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+    color: #2E7D32;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, var(--vert-latte) 0%, var(--vert-pastel) 100%);
+    color: #2E7D32;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%);
+    color: #F57F17;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #FFEBEE 0%, #FFCDD2 100%);
+    color: #C62828;
+}
+
+/* Formulaire de recherche */
+.input-group-lg .form-control {
+    border-radius: 50px 0 0 50px;
+    border: 2px solid var(--vert-pastel);
+    padding: 12px 20px;
+}
+
+.input-group-lg .form-control:focus {
+    border-color: var(--rose-fonce);
+    box-shadow: 0 0 0 3px rgba(244, 143, 177, 0.2);
+    outline: none;
+}
+
+.input-group-lg .btn {
+    border-radius: 0 50px 50px 0;
+}
+
+/* Footer */
+footer {
+    background: linear-gradient(135deg, var(--vert-fonce) 0%, var(--vert-pastel) 100%);
+    color: var(--blanc) !important;
+    padding: 20px 0;
+    margin-top: 50px;
+}
+
+footer p {
+    margin: 0;
+    color: var(--blanc);
+}
+
+/* Cartes de statistiques - couleurs douces */
+.bg-primary, .bg-success, .bg-info, .bg-warning {
+    border-radius: 20px;
+}
+
+/* Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card, .resultat-item {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .display-4 {
+        font-size: 2rem;
+    }
+    
+    .resultat-item h3 {
+        font-size: 1.2rem;
+    }
+    
+    .btn-primary, .btn-secondary {
+        padding: 8px 16px;
+    }
+}
+
+/* Boutons suggestions */
+.suggestion-btn {
+    background: var(--blanc);
+    border: 2px solid var(--vert-pastel);
+    color: var(--vert-fonce);
+    border-radius: 50px;
+    margin: 4px;
+    transition: all 0.3s ease;
+}
+
+.suggestion-btn:hover {
+    background: linear-gradient(135deg, var(--vert-pastel) 0%, var(--vert-fonce) 100%);
+    color: var(--blanc);
+    transform: scale(1.05);
+}
+
+/* Liens */
+a.text-decoration-none {
+    color: var(--vert-fonce);
+}
+
+a.text-decoration-none:hover {
+    color: var(--rose-fonce);
+}
+
+/* Badge genre dans le catalogue */
+.badge.bg-info {
+    background: linear-gradient(135deg, var(--rose-pastel) 0%, var(--rose-fonce) 100%) !important;
+}

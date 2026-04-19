@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Résultats - {{ requete_originale }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <!-- Barre de recherche -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="POST" action="/recherche">
+                    <div class="input-group">
+                        <input type="text" 
+                               class="form-control" 
+                               name="requete" 
+                               value="{{ requete_originale }}"
+                               required>
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search"></i> Rechercher
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Résultats -->
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-chart-line"></i> 
+                    {{ nb_resultats }} résultat(s) trouvé(s)
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-filter"></i> 
+                    <strong>Requête traitée :</strong> "{{ requete_traitee }}"
+                </div>
+
+                {% if resultats %}
+                    {% for livre, score in resultats %}
+                    <div class="resultat-item mb-4 p-3 border rounded">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <h3>
+                                    <a href="{{ url_for('detail_livre', livre_id=livre.id) }}" class="text-decoration-none">
+                                        {{ livre.titre }}
+                                    </a>
+                                </h3>
+                                <p class="text-muted">
+                                    <i class="fas fa-user"></i> {{ livre.auteur if livre.auteur else 'Auteur inconnu' }}
+                                    <span class="ms-3">
+                                        <i class="fas fa-tag"></i> {{ livre.genre if livre.genre else 'Genre non spécifié' }}
+                                    </span>
+                                </p>
+                                <p>{{ livre.description[:300] }}{% if livre.description|length > 300 %}...{% endif %}</p>
+                            </div>
+                            <div class="col-md-3 text-end">
+                                <div class="score-badge">
+                                    <span class="badge bg-success fs-6 p-2">
+                                        <i class="fas fa-star"></i> 
+                                        Score: {{ "%.6f"|format(score) }}
+                                    </span>
+                                </div>
+                                <a href="{{ url_for('detail_livre', livre_id=livre.id) }}" class="btn btn-sm btn-outline-primary mt-2">
+                                    <i class="fas fa-info-circle"></i> Détails
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-search fa-4x text-muted mb-3"></i>
+                        <h4>Aucun résultat trouvé pour "{{ requete_originale }}"</h4>
+                        <p class="text-muted">Essayez avec d'autres mots-clés</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

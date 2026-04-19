@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Statistiques{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="mb-4">
+            <i class="fas fa-chart-bar"></i> Statistiques de la bibliothèque
+        </h1>
+        
+        <!-- Cartes de statistiques -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-center bg-primary text-white">
+                    <div class="card-body">
+                        <i class="fas fa-book fa-3x mb-2"></i>
+                        <h2>{{ stats.nb_livres }}</h2>
+                        <p class="mb-0">Livres</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center bg-success text-white">
+                    <div class="card-body">
+                        <i class="fas fa-tags fa-3x mb-2"></i>
+                        <h2>{{ stats.tokens_uniques }}</h2>
+                        <p class="mb-0">Mots uniques</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center bg-info text-white">
+                    <div class="card-body">
+                        <i class="fas fa-file-alt fa-3x mb-2"></i>
+                        <h2>{{ "%.1f"|format(stats.moyenne_tokens_par_livre) }}</h2>
+                        <p class="mb-0">Mots/livre (moyenne)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center bg-warning text-white">
+                    <div class="card-body">
+                        <i class="fas fa-database fa-3x mb-2"></i>
+                        <h2>{{ stats.nb_tokens_total }}</h2>
+                        <p class="mb-0">Total des tokens</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Répartition par genre -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4><i class="fas fa-chart-pie"></i> Répartition par genre</h4>
+            </div>
+            <div class="card-body">
+                {% for genre, count in stats.livres_par_genre.items() %}
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between">
+                        <span><i class="fas fa-tag"></i> {{ genre }}</span>
+                        <span>{{ count }} livre(s)</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar bg-primary" 
+                             style="width: {{ (count / stats.nb_livres * 100) if stats.nb_livres > 0 else 0 }}%">
+                            {{ "%.1f"|format(count / stats.nb_livres * 100) }}%
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Mots les plus fréquents et les plus rares -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4><i class="fas fa-fire"></i> Mots les plus fréquents</h4>
+                        <p class="text-muted">IDF faible = mots communs</p>
+                    </div>
+                    <div class="card-body">
+                        {% if mots_frequents %}
+                            {% for mot, idf in mots_frequents[:15] %}
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span><strong>{{ mot }}</strong></span>
+                                    <span>IDF: {{ "%.4f"|format(idf) }}</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" style="width: {{ (idf / mots_frequents[0][1] * 100) if mots_frequents[0][1] > 0 else 0 }}%"></div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">Aucune donnée disponible</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4><i class="fas fa-gem"></i> Mots les plus rares</h4>
+                        <p class="text-muted">IDF élevé = mots spécifiques</p>
+                    </div>
+                    <div class="card-body">
+                        {% if mots_rares %}
+                            {% for mot, idf in mots_rares[:15] %}
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span><strong>{{ mot }}</strong></span>
+                                    <span>IDF: {{ "%.4f"|format(idf) }}</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar bg-danger" style="width: {{ (idf / mots_rares[0][1] * 100) if mots_rares[0][1] > 0 else 0 }}%"></div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">Aucune donnée disponible</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
