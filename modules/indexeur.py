@@ -28,12 +28,14 @@ class Indexeur:
     Structure : dictionnaire {id_livre: [liste_des_tokens]}
     """
     
-    def __init__(self, chemin_livres: str = "data/livres.json", 
-                 chemin_stop_words: str = "data/stop_words_fr.txt"):
+    def __init__(self, chemin_livres: Optional[str] = None,
+                 chemin_stop_words: str = "data/stop_words_fr.txt",
+                 verbose: bool = False):
         """
         Initialise l'indexeur et charge les livres
         """
         self.chemin_livres = chemin_livres
+        self.verbose = verbose
         self.preprocesseur = Preprocesseur(chemin_stop_words)
         
         # Étape 3.1 : Structure de l'index
@@ -51,6 +53,7 @@ class Indexeur:
         
         # Stockage des livres complets
         self.livres: List[Dict] = []
+        self._livres_par_id: Dict[int, Dict] = {}
         
         # Chargement des livres
         self.charger_livres()
@@ -73,28 +76,57 @@ class Indexeur:
     
     def charger_livres(self) -> List[Dict]:
         """Charge les livres depuis le fichier JSON"""
+        if not self.chemin_livres:
+            self.livres = []
+            self._livres_par_id = {}
+            if self.verbose:
+                print("ℹ️ Aucun fichier JSON configuré : corpus initial vide")
+            return []
+
         try:
             with open(self.chemin_livres, 'r', encoding='utf-8') as fichier:
                 self.livres = json.load(fichier)
-            print(f"✅ {len(self.livres)} livres chargés depuis {self.chemin_livres}")
+            self._livres_par_id = {livre.get('id'): livre for livre in self.livres if livre.get('id') is not None}
+            if self.verbose:
+                print(f"✅ {len(self.livres)} livres chargés depuis {self.chemin_livres}")
             return self.livres
         except FileNotFoundError:
-            print(f"❌ Fichier {self.chemin_livres} non trouvé !")
+            if self.verbose:
+                print(f"❌ Fichier {self.chemin_livres} non trouvé !")
             self.livres = []
+            self._livres_par_id = {}
             return []
         except json.JSONDecodeError:
-            print(f"❌ Erreur de lecture du fichier JSON {self.chemin_livres}")
+            if self.verbose:
+                print(f"❌ Erreur de lecture du fichier JSON {self.chemin_livres}")
             self.livres = []
+            self._livres_par_id = {}
             return []
     
     def sauvegarder_livres(self):
         """Sauvegarde les livres dans le fichier JSON"""
+        if not self.chemin_livres:
+            if self.verbose:
+                print("ℹ️ Sauvegarde ignorée : aucun fichier JSON configuré")
+            return
+
         try:
             with open(self.chemin_livres, 'w', encoding='utf-8') as fichier:
                 json.dump(self.livres, fichier, ensure_ascii=False, indent=4)
-            print(f"✅ {len(self.livres)} livres sauvegardés")
+            if self.verbose:
+                print(f"✅ {len(self.livres)} livres sauvegardés")
         except Exception as e:
-            print(f"❌ Erreur lors de la sauvegarde : {e}")
+            if self.verbose:
+                print(f"❌ Erreur lors de la sauvegarde : {e}")
+
+    def definir_livres(self, livres: List[Dict]):
+        """Remplace le corpus courant puis recalcule tout l'index TF-IDF."""
+        self.livres = livres or []
+        self._livres_par_id = {livre.get('id'): livre for livre in self.livres if livre.get('id') is not None}
+        self.indexer_tous_les_livres()
+        self.calculer_tf_pour_tous_les_livres()
+        self.calculer_idf_et_stocker()
+        self.calculer_tfidf_et_stocker()
     
     # ================================================================
     # EXTRACTION DU TEXTE À INDEXER
@@ -119,9 +151,10 @@ class Indexeur:
     
     def indexer_tous_les_livres(self):
         """Indexe tous les livres"""
-        print("\n" + "=" * 60)
-        print("📚 ÉTAPE 3.1 : INDEXATION DES LIVRES")
-        print("=" * 60)
+        if self.verbose:
+            print("\n" + "=" * 60)
+            print("📚 ÉTAPE 3.1 : INDEXATION DES LIVRES")
+            print("=" * 60)
         
         self.index = {}
         
@@ -133,12 +166,14 @@ class Indexeur:
             tokens = self.indexer_livre(livre)
             self.index[livre_id] = tokens
             
-            titre = livre.get('titre', 'Inconnu')
-            print(f"  📖 [{livre_id}] {titre[:30]:30s} → {len(tokens)} tokens")
+            if self.verbose:
+                titre = livre.get('titre', 'Inconnu')
+                print(f"  📖 [{livre_id}] {titre[:30]:30s} → {len(tokens)} tokens")
         
-        print("-" * 60)
-        print(f"✅ {len(self.index)} livres indexés")
-        print("=" * 60)
+        if self.verbose:
+            print("-" * 60)
+            print(f"✅ {len(self.index)} livres indexés")
+            print("=" * 60)
     
     # ================================================================
     # ÉTAPE 3.2 : CALCUL DU TF
@@ -159,9 +194,10 @@ class Indexeur:
     
     def calculer_tf_pour_tous_les_livres(self):
         """Calcule le TF pour tous les livres indexés"""
-        print("\n" + "=" * 60)
-        print("📊 ÉTAPE 3.2 : CALCUL DU TF (TERM FREQUENCY)")
-        print("=" * 60)
+        if self.verbose:
+            print("\n" + "=" * 60)
+            print("📊 ÉTAPE 3.2 : CALCUL DU TF (TERM FREQUENCY)")
+            print("=" * 60)
         
         self.tf_scores = {}
         
@@ -169,17 +205,17 @@ class Indexeur:
             tf = self.calculer_tf(tokens)
             self.tf_scores[livre_id] = tf
             
-            livre = self.obtenir_livre(livre_id)
-            titre = livre.get('titre', 'Inconnu') if livre else 'Inconnu'
-            
-            if tf:
+            if self.verbose and tf:
+                livre = self.obtenir_livre(livre_id)
+                titre = livre.get('titre', 'Inconnu') if livre else 'Inconnu'
                 top_mots = sorted(tf.items(), key=lambda x: x[1], reverse=True)[:3]
                 top_affichage = ', '.join([f"{mot}({tf:.3f})" for mot, tf in top_mots])
                 print(f"  📖 [{livre_id}] {titre[:25]:25s} → Top TF : {top_affichage}")
         
-        print("-" * 60)
-        print(f"✅ TF calculé pour {len(self.tf_scores)} livres")
-        print("=" * 60)
+        if self.verbose:
+            print("-" * 60)
+            print(f"✅ TF calculé pour {len(self.tf_scores)} livres")
+            print("=" * 60)
     
     def obtenir_tf(self, livre_id: int, mot: str) -> float:
         """Récupère le TF d'un mot spécifique dans un livre"""
@@ -238,16 +274,18 @@ class Indexeur:
     
     def calculer_idf_et_stocker(self):
         """Calcule l'IDF pour tous les mots et stocke les résultats"""
-        print("\n" + "=" * 60)
-        print("📊 ÉTAPE 3.3 : CALCUL DE L'IDF (INVERSE DOCUMENT FREQUENCY)")
-        print("=" * 60)
+        if self.verbose:
+            print("\n" + "=" * 60)
+            print("📊 ÉTAPE 3.3 : CALCUL DE L'IDF (INVERSE DOCUMENT FREQUENCY)")
+            print("=" * 60)
         
         self.idf_scores = self.calculer_idf()
         
-        print(f"  📚 Nombre total de livres : {len(self.index)}")
-        print(f"  🔤 Nombre de mots uniques : {len(self.idf_scores)}")
+        if self.verbose:
+            print(f"  📚 Nombre total de livres : {len(self.index)}")
+            print(f"  🔤 Nombre de mots uniques : {len(self.idf_scores)}")
         
-        if self.idf_scores:
+        if self.verbose and self.idf_scores:
             mots_rares = sorted(self.idf_scores.items(), key=lambda x: x[1], reverse=True)[:10]
             print("\n  🦄 Mots les plus rares (IDF élevé) :")
             for mot, idf in mots_rares:
@@ -258,9 +296,10 @@ class Indexeur:
             for mot, idf in mots_frequents:
                 print(f"     {mot:15s} : IDF = {idf:.4f}")
         
-        print("-" * 60)
-        print(f"✅ IDF calculé pour {len(self.idf_scores)} mots uniques")
-        print("=" * 60)
+        if self.verbose:
+            print("-" * 60)
+            print(f"✅ IDF calculé pour {len(self.idf_scores)} mots uniques")
+            print("=" * 60)
     
     def obtenir_idf(self, mot: str) -> float:
         """Récupère l'IDF d'un mot spécifique"""
@@ -296,6 +335,9 @@ class Indexeur:
         Returns:
             Dict[int, Dict[str, float]]: Matrice {id_livre: {mot: tfidf}}
         """
+        if not self.index:
+            return {}
+
         if not self.tf_scores or not self.idf_scores:
             print("❌ Erreur : TF ou IDF non calculé. Veuillez d'abord exécuter les étapes 3.2 et 3.3.")
             return {}
@@ -313,33 +355,38 @@ class Indexeur:
     
     def calculer_tfidf_et_stocker(self):
         """ÉTAPE 3.4 : Calcule le TF-IDF pour tous les livres et stocke les résultats"""
-        print("\n" + "=" * 60)
-        print("📊 ÉTAPE 3.4 : CALCUL DU TF-IDF")
-        print("=" * 60)
+        if self.verbose:
+            print("\n" + "=" * 60)
+            print("📊 ÉTAPE 3.4 : CALCUL DU TF-IDF")
+            print("=" * 60)
         
         self.tfidf_matrix = self.calculer_tfidf()
         
         if not self.tfidf_matrix:
-            print("❌ Erreur lors du calcul du TF-IDF")
+            if self.verbose and not self.index:
+                print("ℹ️ Aucun livre à indexer pour le moment")
+            elif self.verbose:
+                print("❌ Erreur lors du calcul du TF-IDF")
             return
         
-        print(f"  📚 Nombre de livres : {len(self.tfidf_matrix)}")
-        
-        print("\n  📖 Top mots par livre (TF-IDF le plus élevé) :")
-        print("-" * 50)
-        
-        for livre_id, tfidf_dict in self.tfidf_matrix.items():
-            if tfidf_dict:
-                top_mots = sorted(tfidf_dict.items(), key=lambda x: x[1], reverse=True)[:3]
-                top_affichage = ', '.join([f"{mot}({score:.4f})" for mot, score in top_mots])
-                
-                livre = self.obtenir_livre(livre_id)
-                titre = livre.get('titre', 'Inconnu') if livre else 'Inconnu'
-                print(f"     [{livre_id}] {titre[:25]:25s} → {top_affichage}")
-        
-        print("-" * 60)
-        print(f"✅ TF-IDF calculé pour {len(self.tfidf_matrix)} livres")
-        print("=" * 60)
+        if self.verbose:
+            print(f"  📚 Nombre de livres : {len(self.tfidf_matrix)}")
+            
+            print("\n  📖 Top mots par livre (TF-IDF le plus élevé) :")
+            print("-" * 50)
+            
+            for livre_id, tfidf_dict in self.tfidf_matrix.items():
+                if tfidf_dict:
+                    top_mots = sorted(tfidf_dict.items(), key=lambda x: x[1], reverse=True)[:3]
+                    top_affichage = ', '.join([f"{mot}({score:.4f})" for mot, score in top_mots])
+                    
+                    livre = self.obtenir_livre(livre_id)
+                    titre = livre.get('titre', 'Inconnu') if livre else 'Inconnu'
+                    print(f"     [{livre_id}] {titre[:25]:25s} → {top_affichage}")
+            
+            print("-" * 60)
+            print(f"✅ TF-IDF calculé pour {len(self.tfidf_matrix)} livres")
+            print("=" * 60)
     
     def obtenir_tfidf(self, livre_id: int, mot: str) -> float:
         """
@@ -439,10 +486,7 @@ class Indexeur:
     
     def obtenir_livre(self, livre_id: int) -> Optional[Dict]:
         """Récupère les informations d'un livre"""
-        for livre in self.livres:
-            if livre.get('id') == livre_id:
-                return livre
-        return None
+        return self._livres_par_id.get(livre_id)
     
     def obtenir_tous_les_livres(self) -> List[Dict]:
         """Récupère tous les livres"""
@@ -484,8 +528,12 @@ class Indexeur:
         """Calcule les statistiques de l'index"""
         if not self.index:
             return {"nb_livres": 0, "nb_tokens_total": 0, "moyenne_tokens_par_livre": 0, "tokens_uniques": 0, "livres_par_genre": {}}
-        
-        tous_les_tokens = [t for tokens in self.index.values() for t in tokens]
+
+        nb_tokens_total = 0
+        tokens_uniques_set = set()
+        for tokens in self.index.values():
+            nb_tokens_total += len(tokens)
+            tokens_uniques_set.update(tokens)
         
         livres_par_genre = {}
         for livre in self.livres:
@@ -494,9 +542,9 @@ class Indexeur:
         
         return {
             "nb_livres": len(self.index),
-            "nb_tokens_total": len(tous_les_tokens),
-            "moyenne_tokens_par_livre": len(tous_les_tokens) / len(self.index),
-            "tokens_uniques": len(set(tous_les_tokens)),
+            "nb_tokens_total": nb_tokens_total,
+            "moyenne_tokens_par_livre": nb_tokens_total / len(self.index),
+            "tokens_uniques": len(tokens_uniques_set),
             "livres_par_genre": livres_par_genre
         }
     
@@ -528,8 +576,8 @@ if __name__ == "__main__":
     print("🧪 TEST DU MODULE INDEXEUR (ÉTAPES 3.1, 3.2, 3.3 ET 3.4)")
     print("=" * 70)
     
-    # Création de l'indexeur
-    indexeur = Indexeur("data/livres.json", "data/stop_words_fr.txt")
+    # Création de l'indexeur (sans JSON local)
+    indexeur = Indexeur(None, "data/stop_words_fr.txt")
     
     # Affichage des statistiques
     indexeur.afficher_statistiques()

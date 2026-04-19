@@ -12,6 +12,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from modules.indexeur import Indexeur
 from modules.recherche import MoteurRecherche
+from modules.openlibrary_api import OpenLibraryAPI
 
 # Création de l'application Flask
 app = Flask(__name__)
@@ -20,9 +21,11 @@ app.secret_key = "votre_cle_secrete_pour_les_sessions"
 # Initialisation du moteur de recherche
 print("🚀 Démarrage de l'application...")
 print("📚 Chargement de l'indexeur...")
-indexeur = Indexeur("data/livres.json", "data/stop_words_fr.txt")
+indexeur = Indexeur(None, "data/stop_words_fr.txt")
 print("🔍 Chargement du moteur de recherche...")
 moteur = MoteurRecherche(indexeur)
+print("🌐 Initialisation du client Open Library...")
+openlibrary_api = OpenLibraryAPI()
 print("✅ Application prête !")
 
 
@@ -58,7 +61,19 @@ def rechercher():
         flash('Veuillez saisir une requête de recherche', 'warning')
         return redirect(url_for('accueil'))
     
-    # Effectuer la recherche
+    # Récupérer le corpus depuis Open Library puis l'indexer localement
+    livres_openlibrary = openlibrary_api.rechercher_livres(requete, limit=80)
+
+    if not livres_openlibrary:
+        flash("Aucun livre trouvé sur Open Library pour cette requête. Essaie des mots-clés plus généraux.", "warning")
+        return render_template('resultats.html',
+                               requete_originale=requete,
+                               requete_traitee="",
+                               resultats=[],
+                               nb_resultats=0)
+
+    # Utilise le même pipeline local: préprocesseur + indexeur + TF-IDF
+    indexeur.definir_livres(livres_openlibrary)
     resultats_liste = moteur.rechercher(requete, top_n=20)
     
     # Récupérer les tokens de la requête traitée
@@ -81,12 +96,31 @@ def liste_livres():
     """
     Route /livres : Page qui liste tous les livres
     """
+    # Optionnel: filtrer le catalogue via ?q=...
+    requete_catalogue = request.args.get('q', '').strip()
+
+    # Si une requête est fournie, on recharge le corpus depuis Open Library.
+    if requete_catalogue:
+        livres_api = openlibrary_api.rechercher_livres(requete_catalogue, limit=80)
+        if livres_api:
+            indexeur.definir_livres(livres_api)
+        else:
+            flash("Aucun livre trouvé pour cette recherche dans le catalogue", "warning")
+
+    # Si le corpus est vide (premier chargement), charger un catalogue par défaut.
     livres = indexeur.obtenir_tous_les_livres()
+    if not livres:
+        livres_api = openlibrary_api.rechercher_livres("classic literature", limit=80)
+        if livres_api:
+            indexeur.definir_livres(livres_api)
+            livres = indexeur.obtenir_tous_les_livres()
+        else:
+            flash("Impossible de charger le catalogue Open Library pour le moment", "warning")
     
     # Trier les livres par titre
     livres_tries = sorted(livres, key=lambda x: x.get('titre', ''))
     
-    return render_template('livres.html', livres=livres_tries)
+    return render_template('livres.html', livres=livres_tries, requete_catalogue=requete_catalogue)
 
 
 # ================================================================

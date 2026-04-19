@@ -9,8 +9,53 @@
             <i class="fas fa-book"></i> Catalogue des livres
             <span class="badge bg-primary">{{ livres|length }} livres</span>
         </h1>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="GET" action="{{ url_for('liste_livres') }}" data-skeleton-target="#catalogue-skeleton-scope">
+                    <div class="input-group">
+                        <input type="text"
+                               class="form-control"
+                               name="q"
+                               value="{{ requete_catalogue if requete_catalogue else '' }}"
+                               placeholder="Filtrer le catalogue  (titre, auteur, genre)...">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search"></i> Filtrer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
         
+        <div id="catalogue-skeleton-scope" class="skeleton-scope">
+            <div class="skeleton">
+                <div class="row">
+                    {% for _ in range(6) %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="skeleton-card h-100">
+                            <div class="skeleton-line title"></div>
+                            <div class="skeleton-line medium"></div>
+                            <div class="skeleton-line short"></div>
+                            <div class="skeleton-line long"></div>
+                            <div class="skeleton-line long"></div>
+                            <div class="skeleton-line medium mb-0"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="real-content">
         <div class="row">
+            {% if not livres %}
+            <div class="col-12">
+                <div class="alert alert-warning mb-0">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Aucun livre a afficher pour le moment. Essaye une autre recherche de catalogue.
+                </div>
+            </div>
+            {% endif %}
+
             {% for livre in livres %}
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card h-100 shadow-sm">
@@ -20,11 +65,13 @@
                                 {{ livre.titre }}
                             </a>
                         </h5>
+
                         <h6 class="card-subtitle mb-2 text-muted">
                             <i class="fas fa-user"></i> {{ livre.auteur if livre.auteur else 'Auteur inconnu' }}
                         </h6>
-                        <span class="badge bg-info mb-2">
-                            <i class="fas fa-tag"></i> {{ livre.genre if livre.genre else 'Non spécifié' }}
+                        {% set genres_affiches = (livre.genre.split(', ')[:3] | join(', ')) if livre.genre else 'Non spécifié' %}
+                        <span class="badge bg-info mb-2 d-inline-block text-start" style="max-width: 100%; white-space: normal; overflow-wrap: anywhere; line-height: 1.2;">
+                            <i class="fas fa-tag"></i> {{ genres_affiches|truncate(80, True, '...') }}
                         </span>
                         <p class="card-text mt-2">
                             {{ livre.description[:120] }}{% if livre.description|length > 120 %}...{% endif %}
@@ -34,10 +81,17 @@
                         <a href="{{ url_for('detail_livre', livre_id=livre.id) }}" class="btn btn-sm btn-primary">
                             <i class="fas fa-info-circle"></i> Voir détails
                         </a>
+                        {% if livre.source_url %}
+                        <a href="{{ livre.source_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-external-link-alt"></i> Open Library
+                        </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
             {% endfor %}
+        </div>
+            </div>
         </div>
     </div>
 </div>

@@ -8,7 +8,7 @@
         <!-- Barre de recherche -->
         <div class="card mb-4">
             <div class="card-body">
-                <form method="POST" action="/recherche">
+                <form method="POST" action="/recherche" data-skeleton-target="#resultats-skeleton-scope">
                     <div class="input-group">
                         <input type="text" 
                                class="form-control" 
@@ -24,6 +24,25 @@
         </div>
 
         <!-- Résultats -->
+        <div id="resultats-skeleton-scope" class="skeleton-scope">
+        <div class="card shadow skeleton mb-0">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-chart-line"></i> Chargement des resultats...</h4>
+            </div>
+            <div class="card-body">
+                {% for _ in range(4) %}
+                <div class="skeleton-card mb-3">
+                    <div class="skeleton-line title"></div>
+                    <div class="skeleton-line medium"></div>
+                    <div class="skeleton-line long"></div>
+                    <div class="skeleton-line long"></div>
+                    <div class="skeleton-line short mb-0"></div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="real-content">
         <div class="card shadow">
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">
@@ -62,6 +81,11 @@
                                         Score: {{ "%.6f"|format(score) }}
                                     </span>
                                 </div>
+                                {% if livre.source_url %}
+                                <a href="{{ livre.source_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-primary mt-2">
+                                    <i class="fas fa-external-link-alt"></i> Source
+                                </a>
+                                {% endif %}
                                 <a href="{{ url_for('detail_livre', livre_id=livre.id) }}" class="btn btn-sm btn-outline-primary mt-2">
                                     <i class="fas fa-info-circle"></i> Détails
                                 </a>
@@ -72,11 +96,13 @@
                 {% else %}
                     <div class="text-center py-5">
                         <i class="fas fa-search fa-4x text-muted mb-3"></i>
-                        <h4>Aucun résultat trouvé pour "{{ requete_originale }}"</h4>
-                        <p class="text-muted">Essayez avec d'autres mots-clés</p>
+                        <h4>Aucun résultat pertinent trouvé pour "{{ requete_originale }}"</h4>
+                        <p class="text-muted">Les livres ont bien été récupérés depuis Open Library, mais aucun score TF-IDF positif n'a été calculé.</p>
                     </div>
                 {% endif %}
             </div>
+        </div>
+        </div>
         </div>
     </div>
 </div>

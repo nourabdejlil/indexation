@@ -357,7 +357,7 @@ if __name__ == "__main__":
     
     # Création de l'indexeur
     print("\n📚 Chargement de l'indexeur...")
-    indexeur = Indexeur("data/livres.json", "data/stop_words_fr.txt")
+    indexeur = Indexeur(None, "data/stop_words_fr.txt")
     
     # Création du moteur de recherche
     moteur = MoteurRecherche(indexeur)

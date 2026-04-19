@@ -5,7 +5,6 @@
 {% block content %}
 <div class="row">
     <div class="col-md-8 mx-auto">
-        <!-- Fil d'Ariane -->
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ url_for('accueil') }}">Accueil</a></li>
@@ -14,31 +13,32 @@
             </ol>
         </nav>
 
-        <!-- Carte du livre -->
         <div class="card shadow">
             <div class="card-header bg-primary text-white">
-                <h2 class="mb-0">{{ livre.titre }}</h2>
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <h2 class="mb-0">{{ livre.titre }}</h2>
+        
+                </div>
             </div>
+
             <div class="card-body">
-                <!-- Auteur -->
+
+
                 <div class="mb-4">
                     <h5><i class="fas fa-user"></i> Auteur</h5>
                     <p class="lead">{{ livre.auteur if livre.auteur else 'Non spécifié' }}</p>
                 </div>
 
-                <!-- Genre -->
                 <div class="mb-4">
                     <h5><i class="fas fa-tag"></i> Genre</h5>
                     <span class="badge bg-info fs-6 p-2">{{ livre.genre if livre.genre else 'Non spécifié' }}</span>
                 </div>
 
-                <!-- Description -->
                 <div class="mb-4">
                     <h5><i class="fas fa-align-left"></i> Description</h5>
-                    <p class="lead">{{ livre.description }}</p>
+                    <p class="lead">{{ livre.description if livre.description else 'Description non disponible' }}</p>
                 </div>
 
-                <!-- Mots clés importants (TF-IDF) -->
                 {% if mots_cles %}
                 <div class="mb-4">
                     <h5><i class="fas fa-star"></i> Mots clés importants</h5>
@@ -53,17 +53,24 @@
                 </div>
                 {% endif %}
 
-                <!-- Statistiques du livre -->
                 <div class="alert alert-info">
                     <i class="fas fa-chart-line"></i>
                     <strong>Statistiques :</strong>
-                    Ce livre contient <strong>{{ nb_tokens }}</strong> mots (après suppression des stop words)
+                    Ce livre contient <strong>{{ nb_tokens }}</strong> mots apres pretraitement (stop words supprimes)
                 </div>
             </div>
-            <div class="card-footer">
+
+            <div class="card-footer d-flex flex-wrap gap-2">
                 <a href="{{ url_for('liste_livres') }}" class="btn btn-secondary">
                     <i class="fas fa-arrow-left"></i> Retour au catalogue
                 </a>
+
+                {% if livre.source_url %}
+                <a href="{{ livre.source_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary">
+                    <i class="fas fa-external-link-alt"></i> Voir sur Open Library
+                </a>
+                {% endif %}
+
                 <a href="{{ url_for('rechercher') }}?q={{ livre.titre }}" class="btn btn-primary">
                     <i class="fas fa-search"></i> Rechercher des livres similaires
                 </a>
